@@ -6,10 +6,27 @@ FT_STATUS ftStatus;
 ULONG baudRate = 250000;
 
 DWORD bytesWritten;
-char txBuffer[256] = {0xE7, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00};
+char txBuffer[256] = {0xE7, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40};
+
+int ledParSetup();
 
 
-int main()
+int main(int argc, char* argv[])
+{
+    ledParSetup();
+    // Write data to the device
+    ftStatus = FT_Write(ftHandle, txBuffer, sizeof(txBuffer), &bytesWritten);
+    if (ftStatus != FT_OK)
+    {
+        printf("Error while writing to device. Exiting...\n");
+        return 1;
+    }
+
+    FT_Close(ftHandle);
+    return 0;
+}
+
+int ledParSetup()
 {
     ftStatus = FT_Open(0, &ftHandle);
     if (ftStatus == FT_OK)
@@ -42,20 +59,4 @@ int main()
     }
 
     ftStatus = FT_SetFlowControl(ftHandle, 0, 0, 0);
-
-    do {
-        // Write data to the device
-        ftStatus = FT_Write(ftHandle, txBuffer, sizeof(txBuffer), &bytesWritten);
-        if (ftStatus != FT_OK)
-        {
-            printf("Error while writing to device. Exiting...\n");
-            return 1;
-        }
-    } while (1);
-
-
-
-
-    FT_Close(ftHandle);
-    return 0;
 }
