@@ -15,15 +15,12 @@ int main(int argc, char* argv[])
 {
     ledParSetup();
     // Write data to the device
-    do
+    ftStatus = FT_Write(ftHandle, txBuffer, sizeof(txBuffer), &bytesWritten);
+    if (ftStatus != FT_OK)
     {
-        ftStatus = FT_Write(ftHandle, txBuffer, sizeof(txBuffer), &bytesWritten);
-        if (ftStatus != FT_OK)
-        {
-            printf("Error while writing to device. Exiting...\n");
-            return 1;
-        }
-    } while (1);
+        printf("Error while writing to device. Exiting...\n");
+        return 1;
+    }
 
     FT_Close(ftHandle);
     return 0;
@@ -54,7 +51,7 @@ int ledParSetup()
 
     ftStatus = FT_SetDataCharacteristics(ftHandle, FT_BITS_8, FT_STOP_BITS_2, FT_PARITY_NONE);
     if (ftStatus == FT_OK)
-        printf("Bits per word: 8. Number of stop bits: 2. No parity.\n");
+        printf("Bits per word: 8. Number of stop bits: 2. No parity.");
     else
     {
         printf("Couldn't set data characteristics. Exiting...\n");
