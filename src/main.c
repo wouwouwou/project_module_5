@@ -51,7 +51,7 @@ int ledParSetup()
 
     ftStatus = FT_SetDataCharacteristics(ftHandle, FT_BITS_8, FT_STOP_BITS_2, FT_PARITY_NONE);
     if (ftStatus == FT_OK)
-        printf("Bits per word: 8. Number of stop bits: 2. No parity.");
+        printf("Bits per word: 8. Number of stop bits: 2. No parity.\n");
     else
     {
         printf("Couldn't set data characteristics. Exiting...\n");
