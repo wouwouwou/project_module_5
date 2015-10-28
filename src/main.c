@@ -1,5 +1,9 @@
 #include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include "../headers/ftd2xx.h"
+
+#define MAX_BUF 256
 
 FT_HANDLE ftHandle;
 FT_STATUS ftStatus;
@@ -14,6 +18,25 @@ int ledParSetup();
 int main(int argc, char* argv[])
 {
     ledParSetup();
+
+    int fd;
+    char * myfifo = "/tmp/myfifo";
+    char buf[MAX_BUF];
+    while (1)
+    {
+        /* open, read, and display the message from the FIFO */
+        fd = open(myfifo, O_RDONLY);
+        read(fd, buf, MAX_BUF);
+        printf("Received input.\n");
+        ftStatus = FT_Write(ftHandle, buf, sizeof(buf), &bytesWritten);
+        close(fd);
+    }
+
+
+    return 0;
+
+
+
     // Write data to the device
     ftStatus = FT_Write(ftHandle, txBuffer, sizeof(txBuffer), &bytesWritten);
     if (ftStatus != FT_OK)
