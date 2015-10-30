@@ -10,7 +10,7 @@ FT_STATUS ftStatus;
 ULONG baudRate = 250000;
 
 DWORD bytesWritten;
-char txBuffer[256] = {0xE7, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40};
+char txBuffer[MAX_BUF] = {0xE7, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40};
 
 int ledParSetup();
 
@@ -20,6 +20,7 @@ int main(int argc, char* argv[])
     ledParSetup();
 
     int fd;
+    int readCounter = 1;
     char * myfifo = "/tmp/myfifo";
     char buf[MAX_BUF];
     while (1)
@@ -27,7 +28,7 @@ int main(int argc, char* argv[])
         /* open, read, and display the message from the FIFO */
         fd = open(myfifo, O_RDONLY);
         read(fd, buf, MAX_BUF);
-        printf("Received input.\n");
+        printf("Received input. - %d\n", readCounter++);
         ftStatus = FT_Write(ftHandle, buf, sizeof(buf), &bytesWritten);
         close(fd);
     }
@@ -56,7 +57,7 @@ int ledParSetup()
         printf("All OK!\n");
     else
     {
-        printf("Error! Did you forget to remove ftdi_sio and usbserial?\n");
+        printf("Error! Did you forget to run \"sudo rmmod ftdi_sio\" and \"sudo rmmod usbserial\"?\n");
         return 1;
     }
 
