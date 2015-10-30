@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
 
     int fd;
     int readCounter = 1;
-    char * myfifo = "/tmp/myfifo";
+    char * myfifo = "/dev/shm/ledfifo";
     char buf[MAX_BUF];
     while (1)
     {
@@ -33,21 +33,6 @@ int main(int argc, char* argv[])
         close(fd);
     }
 
-
-    return 0;
-
-
-
-    // Write data to the device
-    ftStatus = FT_Write(ftHandle, txBuffer, sizeof(txBuffer), &bytesWritten);
-    if (ftStatus != FT_OK)
-    {
-        printf("Error while writing to device. Exiting...\n");
-        return 1;
-    }
-
-    FT_Close(ftHandle);
-    return 0;
 }
 
 int ledParSetup()
